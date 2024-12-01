@@ -12,7 +12,7 @@ if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])) { $_SERVER['REMOTE_ADDR'] = $_SERV
 $ip = $_SERVER['REMOTE_ADDR'];
 $ua =  $_SERVER['HTTP_USER_AGENT'];
 
-$api = json_decode(file_get_contents('http://free.ipwhois.io/json/'.$ip), true);
+$api = json_decode(file_get_contents('http://ipwhois.io/json/'.$ip), true);
 $country = $api['country'];
 $region = $api['region'];
 $city = $api['city'];
