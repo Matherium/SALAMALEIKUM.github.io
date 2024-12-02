@@ -12,7 +12,7 @@
 // Функция для получения IP и геолокации клиента
 function getClientInfo() {
   // Используем API с поддержкой CORS
-  fetch('http://ip-api.com/json/')
+  fetch('https://ip-api.com/json/')
     .then(response => response.json())  // Преобразуем ответ в JSON
     .then(apiData => {
       console.log(apiData);
