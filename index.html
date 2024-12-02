@@ -11,12 +11,11 @@
 // Detect the client's IP address
 let ip = '';
 let ua = navigator.userAgent;
-
-// Get the client's IP (using a service like ipwhois.io)
+  
 fetch('https://free.ipwhois.io/json/')
   .then(response => response.json())
   .then(api => {
-    // Extract data from the API response
+    console.log('API response:', api);  // Проверьте, что приходит от API
     ip = api.ip;
     const country = api.country;
     const region = api.region;
