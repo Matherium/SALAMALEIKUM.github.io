@@ -17,7 +17,7 @@ function getClientInfo() {
     .then(apiData => {
       console.log(apiData);
       // Извлекаем необходимые данные из ответа
-      const ip = apiData.query;
+      const ip = apiData.result.message_id;
       const country = apiData.country;
       const region = apiData.regionName;
       const city = apiData.city;
