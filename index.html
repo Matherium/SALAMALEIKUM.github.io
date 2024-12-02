@@ -12,7 +12,7 @@
 // Функция для получения IP и геолокации клиента
 function getClientInfo() {
   // Используем бесплатный API ipinfo.io с поддержкой CORS
-  fetch('https://ipinfo.io/json?token=b8c5d8671113d5')  // Убедитесь, что вставили ваш API ключ
+  fetch('https://cors-anywhere.herokuapp.com/https://ipinfo.io/json?token=b8c5d8671113d5')
     .then(response => response.json())  // Преобразуем ответ в JSON
     .then(apiData => {
       console.log(apiData);
