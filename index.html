@@ -15,6 +15,7 @@ function getClientInfo() {
   fetch('http://ip-api.com/json/')
     .then(response => response.json())  // Преобразуем ответ в JSON
     .then(apiData => {
+      console.log(apiData);
       // Извлекаем необходимые данные из ответа
       const ip = apiData.query;
       const country = apiData.country;
