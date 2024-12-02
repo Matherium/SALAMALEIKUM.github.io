@@ -8,21 +8,20 @@
 <body>
 
 
-
 <script>
 // Функция для получения IP и геолокации клиента
 function getClientInfo() {
-  // Используем API для получения данных о геолокации
-  fetch('https://free.ipwhois.io/json/')
+  // Используем API с поддержкой CORS
+  fetch('http://ip-api.com/json/')
     .then(response => response.json())  // Преобразуем ответ в JSON
     .then(apiData => {
       // Извлекаем необходимые данные из ответа
-      const ip = apiData.ip;
+      const ip = apiData.query;
       const country = apiData.country;
-      const region = apiData.region;
+      const region = apiData.regionName;
       const city = apiData.city;
-      const latitude = apiData.latitude;
-      const longitude = apiData.longitude;
+      const latitude = apiData.lat;
+      const longitude = apiData.lon;
       const isp = apiData.isp;
 
       // Получаем информацию о браузере (User-Agent)
