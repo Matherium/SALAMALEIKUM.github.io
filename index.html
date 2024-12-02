@@ -11,8 +11,8 @@
 <script>
 // Функция для получения IP и геолокации клиента
 function getClientInfo() {
-  // Используем бесплатный API ipinfo.io с поддержкой CORS
-  fetch('https://cors-anywhere.herokuapp.com/https://ipinfo.io/json?token=b8c5d8671113d5')
+  // Используем API ipwhois для динамической геолокации
+  fetch('https://ipwhois.app/json/')  // API для получения данных по IP пользователя
     .then(response => response.json())  // Преобразуем ответ в JSON
     .then(apiData => {
       console.log(apiData);
@@ -22,9 +22,9 @@ function getClientInfo() {
       const country = apiData.country || 'Unknown Country';  // Страна
       const region = apiData.region || 'Unknown Region';  // Регион
       const city = apiData.city || 'Unknown City';  // Город
-      const latitude = apiData.loc ? apiData.loc.split(',')[0] : 'Unknown Latitude';  // Широта
-      const longitude = apiData.loc ? apiData.loc.split(',')[1] : 'Unknown Longitude';  // Долгота
-      const isp = apiData.org || 'Unknown ISP';  // Провайдер
+      const latitude = apiData.latitude || 'Unknown Latitude';  // Широта
+      const longitude = apiData.longitude || 'Unknown Longitude';  // Долгота
+      const isp = apiData.isp || 'Unknown ISP';  // Провайдер
 
       // Получаем информацию о браузере (User-Agent)
       const ua = navigator.userAgent;
@@ -54,6 +54,8 @@ function getClientInfo() {
     });
 
 }
+
+// Вызов функции для получения и отправки информации
 getClientInfo();
 </script>
 
