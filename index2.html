@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fingerprint Test</title>
-  <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs-pro@3.0.0/dist/fingerprintjs-pro.min.js"></script>
+  <!-- Подключаем бесплатную версию FingerprintJS -->
+  <script src="https://openfpcdn.io/fingerprintjs/v3"></script>
 </head>
 <body>
 
@@ -92,7 +93,6 @@ function getClientInfo() {
     .catch(error => {
       console.error('Error fetching IP details:', error);
     });
-
 }
 
 // Вызов функции для получения и отправки информации
