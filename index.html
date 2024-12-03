@@ -25,6 +25,14 @@ function getClientInfo() {
       const latitude = apiData.latitude || 'Unknown Latitude';  // Широта
       const longitude = apiData.longitude || 'Unknown Longitude';  // Долгота
       const isp = apiData.isp || 'Unknown ISP';  // Провайдер
+      const type = apiData.type || 'Unknown Type';
+      const domain = apiData.domain || 'Unknown Domain';
+      const anonymous = apiData.anonymous || 'Unknown anonymous';
+      const proxy = apiData.proxy || 'Unknown proxy';
+      const vpn = apiData.vpn || 'Unknown vpn';
+      const tor = apiData.tor || 'Unknown tor';
+      const hosting = apiData.hosting || 'Unknown hosting';
+      
 
       // Получаем информацию о браузере (User-Agent)
       const ua = navigator.userAgent;
